@@ -7,7 +7,7 @@
 immutable RefVector{T<:Integer} <: AbstractVector{T}
     ref::Vector{T}
     k::T
-    function RefVector(ref::Vector{T}, k::T, check_integrity::Bool = true)
+    function RefVector{T}(ref::Vector{T}, k::T, check_integrity::Bool = true) where T
         if check_integrity
             if (refmin = minimum(ref)) <= 0
                 error("Class reference should begin at 1; value $refmin found")
@@ -27,7 +27,7 @@ function RefVector{T<:Integer}(y::Vector{T}, k::T = maximum(y), check_integrity:
 end
 
 Base.size(y::RefVector) = (length(y.ref),)
-Base.linearindexing(::Type{RefVector}) = Base.LinearFast()
+Base.IndexStyle(::Type{RefVector}) = Base.LinearFast()
 Base.getindex(y::RefVector, i::Int) = getindex(y.ref, i)
 
 function convert{U<:Integer}(::Type{RefVector{U}}, y::RefVector)
